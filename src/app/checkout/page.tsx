@@ -6,10 +6,10 @@ import Link from "next/link";
 type PixResult = {
   transactionId?: string;
   pixCode?: string;
-  qrCode?: string;        // base64 da imagem
+  qrCode?: string; // imagem em base64 ou data URI
   paymentLink?: string;
   status?: string;
-  [key: string]: unknown; // outros campos da API
+  [key: string]: unknown;
 };
 
 export default function CheckoutPage() {
@@ -21,6 +21,7 @@ export default function CheckoutPage() {
   const [error, setError] = useState("");
   const [result, setResult] = useState<PixResult | null>(null);
 
+  // Usa QR Code direto da API quando disponível, senão gera imagem a partir do pixCode.
   const qrImageSrc = result
     ? result.qrCode
       ? result.qrCode.startsWith("data:")
@@ -33,6 +34,7 @@ export default function CheckoutPage() {
       : null
     : null;
 
+  // Envia o formulário para a API e trata o resultado ou erro.
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
